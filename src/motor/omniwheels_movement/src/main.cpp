@@ -13,6 +13,14 @@ AF_DCMotor LeftBackWheel(2);
 AF_DCMotor RightBackWheel(4);
 AF_DCMotor LeftFrontWheel(1);
 
+int motor_arr[4];
+int speed = 255;
+
+int LFW_SPEED = motor_arr[0];
+int LBW_SPEED = motor_arr[1];
+int RFW_SPEED = motor_arr[2];
+int RBW_SPEED = motor_arr[3];
+
 void setup() {
    Serial.begin(BAUD_RATE);
    Serial.println("Motor test!");
@@ -22,11 +30,9 @@ void setup() {
    LeftBackWheel.run(RELEASE);
    LeftFrontWheel.run(RELEASE);
    RightFrontWheel.run(RELEASE);
-
 }
 
 void loop() {
-   int motor_arr[4];
    // Array order:
    //    Left front
    //    Left back
@@ -34,21 +40,18 @@ void loop() {
    //    Right back
 
    // Creating a test seq
-   int speed = 255;
-   for(int i = 0; i<10; i++){
-      moveForward(motor_arr, speed);
-      runMotors(motor_arr);
-      delay(2000);
-      moveSidewaysRight(motor_arr, speed);
-      runMotors(motor_arr);
-      delay(2000);
-      moveBackward(motor_arr, speed);
-      runMotors(motor_arr);
-      delay(2000);
-      moveSidewaysLeft(motor_arr, speed);
-      runMotors(motor_arr);
-      delay(2000);
-   } 
+   moveForward(motor_arr, speed);
+   runMotors(motor_arr);
+   delay(2000);
+   moveSidewaysRight(motor_arr, speed);
+   runMotors(motor_arr);
+   delay(2000);
+   moveBackward(motor_arr, speed);
+   runMotors(motor_arr);
+   delay(2000);
+   moveSidewaysLeft(motor_arr, speed);
+   runMotors(motor_arr);
+   delay(2000);
 }
 
 void runMotor(AF_DCMotor motor, int speed){
@@ -70,45 +73,45 @@ void runMotors(int* motor_arr){
 
 void moveForward(int* motor_arr, int speed)
 {
-   motor_arr[0] = speed;
-   motor_arr[1] = speed;
-   motor_arr[2] = speed;
-   motor_arr[3] = speed; 
+   LFW_SPEED = speed;
+   LBW_SPEED = speed;
+   RFW_SPEED = speed;
+   RBW_SPEED = speed; 
    //LeftFrontWheel.run(FORWARD); 
 }
 void moveBackward(int* motor_arr, int speed) {
-   motor_arr[0] = -speed;
-   motor_arr[1] = -speed;
-   motor_arr[2] = -speed;
-   motor_arr[3] = -speed;
+   LFW_SPEED = -speed;
+   LBW_SPEED = -speed;
+   RFW_SPEED = -speed;
+   RBW_SPEED = -speed;
    
 }
 void moveSidewaysRight(int* motor_arr, int speed) {
-   motor_arr[0] = speed;
-   motor_arr[1] = -speed;
-   motor_arr[2] = -speed;
-   motor_arr[3] = speed;
+   LFW_SPEED = speed;
+   LBW_SPEED = -speed;
+   RFW_SPEED = -speed;
+   RBW_SPEED = speed;
    
 }
 void moveSidewaysLeft(int* motor_arr, int speed) {
-   motor_arr[0] = -speed;
-   motor_arr[1] = speed;
-   motor_arr[2] = speed;
-   motor_arr[3] = -speed;
+   LFW_SPEED = -speed;
+   LBW_SPEED = speed;
+   RFW_SPEED = speed;
+   RBW_SPEED = -speed;
    
 }
 void rotateLeft(int* motor_arr, int speed) {
-   motor_arr[0] = -speed;
-   motor_arr[1] = -speed;
-   motor_arr[2] = speed;
-   motor_arr[3] = speed;
+   LFW_SPEED = -speed;
+   LBW_SPEED = -speed;
+   RFW_SPEED = speed;
+   RBW_SPEED = speed;
    
 }
 void rotateRight(int* motor_arr, int speed) {
-   motor_arr[0] = speed;
-   motor_arr[1] = speed;
-   motor_arr[2] = -speed;
-   motor_arr[3] = -speed;
+   LFW_SPEED = speed;
+   LBW_SPEED = speed;
+   RFW_SPEED = -speed;
+   RBW_SPEED = -speed;
    
 }
 /*
