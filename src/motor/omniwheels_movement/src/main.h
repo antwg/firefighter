@@ -4,21 +4,18 @@
 #include <AFMotor.h>
 #include <Arduino.h>
 
-enum directions{
-    MOVE_FORWARD, MOVE_BACKWARD, MOVE_STOP
-};
-
 void setup();
 
-int convertSpeed(int speed);
-void setSpeed(int speed);
+//Runs a given motor in the correct direction
+void runMotors(int* motor_arr);
 
-directions getDir(int pwmValue);
+// Runs all four motors
+void runMotor(AF_DCMotor motor, int speed);
 
-void moveForward();
-void moveBackward();
-void moveSidewaysRight();
-void moveSidewaysLeft();
+void moveForward(int* motor_arr, int speed);
+void moveBackward(int* motor_arr, int speed);
+void moveSidewaysRight(int* motor_arr, int speed);
+void moveSidewaysLeft(int* motor_arr, int speed);
 
 void rotateLeft();
 void rotateRight();
