@@ -7,23 +7,16 @@
 const int PWM_PIN = A0;
 const int standStill = 1500; // Controller in middle position
 const int BAUD_RATE = 9600;
-
-
-
-
 const int RIGHT_FRONT_WHEEL = 1;
 const int LEFT_BACK_WHEEL = 2;
 const int RIGHT_BACK_WHEEL = 3;
 const int LEFT_FRONT_WHEEL = 4;
-
-const int SPEED_THRESHOLD = 10;
-
+const int SPEED_THRESHOLD = 0;
 
 AF_DCMotor RightFrontWheel(1);
 AF_DCMotor LeftBackWheel(2);
 AF_DCMotor RightBackWheel(3);
 AF_DCMotor LeftFrontWheel(4);
-
 
 void setup() {
    //115200
@@ -60,9 +53,9 @@ void getWheelSpeeds(double x, double y, double omegaZ, double (&speedVector)[4])
    w is the distance from the wheel to the middle of the base.
    These distances are not diagonal, only the straight line on the x or y axis
    */ 
-   double l = -1; // TODO: update these to the correct value 
-   double w = -1;
-   double r = -1; // the radius of the wheel
+   double l = 53; // TODO: update these to the correct value 
+   double w = 56;
+   double r = 27; // the radius of the wheel
    /*
    This is the resulting vector from matrix mutliplication of
            
@@ -104,16 +97,32 @@ end
 */
 
 void setSpeedAndDirection(int speed, AF_DCMotor &wheel){ 
-   if (speed >= SPEED_THRESHOLD){
+   wheel.setSpeed(abs(standStill - speed));
+   
+   if (speed > SPEED_THRESHOLD) {
       wheel.run(FORWARD);
+   } 
+   else if(speed < SPEED_THRESHOLD) {
+      wheel.run(BACKWARD);
+   }
+   else{
+      motorStop();
+   }
+}
+
+   
+
+   /*if (speed >= SPEED_THRESHOLD){
       wheel.setSpeed(speed);
+      wheel.run(FORWARD);
    }
    else if (speed <= -SPEED_THRESHOLD){
-      wheel.run(BACKWARD);
       wheel.setSpeed(abs(speed));
-   }
+      wheel.run(BACKWARD);
 
-}
+   }
+*/
+
 
 /*
 
@@ -122,6 +131,8 @@ void setSpeedAndDirection(int speed, AF_DCMotor &wheel){
 */
 
 void setWheelSpeed(int wheel_case, int speed){
+    
+
    switch (wheel_case)
    {
    case LEFT_BACK_WHEEL:
@@ -141,12 +152,24 @@ void setWheelSpeed(int wheel_case, int speed){
 /*
    Sets the speed of each wheel to the elements of u
 */
-void setWheelSpeed(double (&u)[4]){
-
+void setWheelSpeed2(double (&u)[4]){
+   LeftFrontWheel.run(RELEASE);
+   LeftBackWheel.run(RELEASE);
+   
+   RightFrontWheel.run(RELEASE);
+   RightBackWheel.run(RELEASE);
+   
    // make sure the wheels are mapped to the correct for this to work!
    for (int i = 1; i == sizeof(u) ; i++){
       setWheelSpeed(i, u[i]);
    }
+}
+
+void debugPrints(double (&u)[4]){
+   Serial.println(u[0]);
+   Serial.println(u[1]);
+   Serial.println(u[2]);
+   Serial.println(u[3]);
 }
 
 
@@ -155,34 +178,48 @@ void loop() {
    // this code is untested and therefore commented until it can be tested
    // DO NOT REMOVE as i this is to be tested
    // -----------------------------
-   /*
    
+
    double speedVector[4];
    // this should move the car in x-direction
    getWheelSpeeds(100, 0, 0, speedVector);
-   setWheelSpeed(speedVector);
+   setWheelSpeed2(speedVector);
+   debugPrints(speedVector);
+   delay(2000);
+
    // this should move the car in y-direction
    getWheelSpeeds(0, 100, 0, speedVector);
-   setWheelSpeed(speedVector);
-   // this should spin the car in a circle
+   setWheelSpeed2(speedVector);
+   debugPrints(speedVector);
+      delay(2000);// this should spin the car in a circle
    getWheelSpeeds(0, 0, 50, speedVector);
-   setWheelSpeed(speedVector);
+   setWheelSpeed2(speedVector);
+   delay(2000);
+   debugPrints(speedVector);
    // this should spin the car in a circle the other direction
    getWheelSpeeds(0, 0, -50, speedVector);
-   setWheelSpeed(speedVector);
+   setWheelSpeed2(speedVector);
+   delay(2000);
+   debugPrints(speedVector);
    // this should move diagonal
    getWheelSpeeds(50, 50, 0, speedVector);
-   setWheelSpeed(speedVector);
+   setWheelSpeed2(speedVector);
+   delay(2000);
+   debugPrints(speedVector);
    // this should spin the car while moving y - direction
    getWheelSpeeds(0, 50, 50, speedVector);
-   setWheelSpeed(speedVector);
+   setWheelSpeed2(speedVector);
+   delay(2000);
+   debugPrints(speedVector);
    // this should spin the car while moving x and y - direction
    getWheelSpeeds(40, 40, 40, speedVector);
-   setWheelSpeed(speedVector);
-   
-   */
+   setWheelSpeed2(speedVector);
+   debugPrints(speedVector);
+
+   delay(2000);
 
 
+/*
    int pwmValue = pulseIn(PWM_PIN, HIGH); // Read controller
    Serial.println(pwmValue);
    //Serial.println("\n");
@@ -198,8 +235,12 @@ void loop() {
       case MOVE_BACKWARD:
          moveBackward();
          break;
+  
+  
    }
-   /*
+   
+   
+   
    if (((standStill - threshold) < pwmValue) && ((standStill + threshold) > pwmValue) ){
       motorStop();
    }
@@ -223,9 +264,9 @@ directions getDir(int pwmValue){
 int convertSpeed(int speed){
    return abs(standStill - speed) / 2;
 }
-
+/*
 void setSpeed(int speed){
-   const float SCALE_LEFT_WHEELS = 0.9;
+   const float SCALE_LEFT_WHEELS = 1;
 
    RightBackWheel.setSpeed(speed);
    LeftBackWheel.setSpeed(speed * SCALE_LEFT_WHEELS);
@@ -233,9 +274,18 @@ void setSpeed(int speed){
    RightFrontWheel.setSpeed(speed);
 
 }
-
+*/
 void moveForward()
 {
+
+
+ /*
+   LeftFrontWheel.setSpeed(120);
+   LeftBackWheel.setSpeed(120);
+  
+   RightBackWheel.setSpeed(120);
+   RightFrontWheel.setSpeed(120);
+*/
    LeftFrontWheel.run(FORWARD);
    LeftBackWheel.run(FORWARD);
    
