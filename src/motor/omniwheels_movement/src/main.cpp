@@ -8,10 +8,10 @@ const int PWM_PIN = A0;
 const int standStill = 1500; // Controller in middle position
 const int BAUD_RATE = 9600;
 
-AF_DCMotor RightFrontWheel(1);
+AF_DCMotor RightFrontWheel(3);
 AF_DCMotor LeftBackWheel(2);
-AF_DCMotor RightBackWheel(3);
-AF_DCMotor LeftFrontWheel(4);
+AF_DCMotor RightBackWheel(4);
+AF_DCMotor LeftFrontWheel(1);
 
 void setup() {
    Serial.begin(BAUD_RATE);
